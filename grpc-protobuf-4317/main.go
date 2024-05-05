@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	service     = "sre-grpc-4317-test"
+	service     = "grpc-4317-protobuf-test"
 	environment = "development"
 	id          = 1
 )
