@@ -11,24 +11,27 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
 )
 
 const (
-	service     = "grpc-4317-protobuf-test"
+	service     = "http-4318-protobuf-test"
 	environment = "development"
 	id          = 1
 )
 
 func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 	// Create the Jaeger exporter
-	exp, err := otlptracegrpc.New(context.Background(), otlptracegrpc.WithInsecure(), otlptracegrpc.WithEndpoint(url))
+	exp, err := otlptracehttp.New(context.Background(),
+		otlptracehttp.WithInsecure(),
+		otlptracehttp.WithEndpoint(url))
 	if err != nil {
 		return nil, err
 	}
+
 	tp := tracesdk.NewTracerProvider(
 		// Always be sure to batch in production.
 		tracesdk.WithBatcher(exp),
@@ -45,9 +48,9 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 
 func main() {
 
-	// Jaeger
+	// Jaeger host
 	jaeger_host := "192.168.1.8"
-	jaeger_port := ":4317"
+	jaeger_port := ":4318"
 
 	tp, err := tracerProvider(jaeger_host + jaeger_port)
 	if err != nil {
